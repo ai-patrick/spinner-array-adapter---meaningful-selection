@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">SpinnerAdapter Lab</string>
+    <string name="prompt_select_mushroom">Select a mushroom type…</string>
+    <string name="prompt_select_collection">Select a collection point…</string>
+    <string name="confirmation_title">Selection Confirmed</string>
+    <string name="confirmation_mushroom">Mushroom: %s</string>
+    <string name="confirmation_collection">Collection Point: %s</string>
+    <string name="confirmation_edible">Edible: %s</string>
+    <string name="confirmation_notes">Notes: %s</string>
+    <string name="no_selection">No selection made</string>
+    <string name="empty_list_mushroom">No mushroom types available</string>
+    <string name="empty_list_collection">No collection points available</string>
+    <string name="checkbox_edible">Mark as edible (non-sensitive preference)</string>
+    <string name="checkbox_collected">Mark as collected</string>
+    <string name="btn_switch_mode">Switch to Collection Points</string>
+    <string name="btn_switch_mode_mushroom">Switch to Mushroom Types</string>
+    <string name="label_selected_id">Selected ID: %s</string>
+    <string name="label_position">Position: %d</string>
+</resources>
