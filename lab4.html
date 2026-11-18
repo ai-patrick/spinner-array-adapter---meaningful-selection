@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpinnerAdapter Lab — Spinner, ArrayAdapter & Selection Handling</title>
+  <style>
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #181b1b;
+      background: #fafafa;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #181b1b;
+      border-bottom: 2px solid #6750a4;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 22px;
+      color: #181b1b;
+      margin-top: 40px;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: #3f4945;
+    }
+
+    h4 {
+      font-size: 16px;
+      color: #3f4945;
+    }
+
+    .meta {
+      color: #3f4945;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .meta span {
+      margin-right: 20px;
+    }
+
+    .objective {
+      background: #f3edf7;
+      border-left: 4px solid #6750a4;
+      padding: 16px;
+      margin: 20px 0;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .feature {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: #3f4945;
+    }
+
+    .component-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .component-table th,
+    .component-table td {
+      border: 1px solid #e0e0e0;
+      padding: 12px;
+      text-align: left;
+    }
+
+    .component-table th {
+      background: #f0f0f0;
+      font-weight: 600;
+    }
+
+    .component-table code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .section {
+      margin-top: 40px;
+    }
+
+    .section-number {
+      color: #6750a4;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .code-block .keyword {
+      color: #569cd6;
+    }
+
+    .code-block .string {
+      color: #ce9178;
+    }
+
+    .code-block .comment {
+      color: #6a9955;
+    }
+
+    .code-block .type {
+      color: #4ec9b0;
+    }
+
+    .code-block .method {
+      color: #dcdcaa;
+    }
+
+    .code-block .annotation {
+      color: #d4d4d4;
+    }
+
+    .warning {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 12px;
+      margin: 16px 0;
+    }
+
+    .tip {
+      background: #f3edf7;
+      border-left: 4px solid #6750a4;
+      padding: 12px;
+      margin: 16px 0;
+    }
+
+    .workflow {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .workflow-step {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .workflow-step .step-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .workflow-step .step-label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .validation-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .validation-table th,
+    .validation-table td {
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      text-align: left;
+    }
+
+    .validation-table th {
+      background: #f0f0f0;
+    }
+
+    .validation-table .pass {
+      color: #2e7d32;
+    }
+
+    .validation-table .fail {
+      color: #c62828;
+    }
+
+    pre {
+      margin: 0;
+    }
+
+    .file-label {
+      background: #f0f0f0;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    a {
+      color: #6750a4;
+    }
+
+    a:hover {
+      color: #4f378b;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 40px 0;
+    }
+
+    /* Screenshot styles */
+    .screenshot-box {
+      border: 2px dashed #6750a4;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 16px 0;
+      background: #faf5ff;
+      text-align: center;
+      position: relative;
+    }
+
+    .screenshot-box img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
+    }
+
+    .screenshot-placeholder {
+      color: #6750a4;
+      font-style: italic;
+      font-size: 14px;
+    }
+
+    .screenshot-label {
+      display: inline-block;
+      background: #6750a4;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .screenshot-instruction {
+      background: #f3edf7;
+      border-left: 4px solid #6750a4;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+    }
+
+    .screenshot-instruction strong {
+      color: #6750a4;
+    }
+
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .step-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .step-card-header {
+      background: #6750a4;
+      color: white;
+      padding: 12px 16px;
+      font-weight: 600;
+    }
+
+    .step-card-body {
+      padding: 16px;
+    }
+
+    .screenshot-box {
+      cursor: pointer
+    }
+
+    .screenshot-box.over {
+      background: #e8def8;
+      outline: 3px dashed #6750a4
+    }
+
+    #saveBtn {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 9;
+      background: #6750a4;
+      color: #fff;
+      border: 0;
+      border-radius: 24px;
+      padding: 10px 18px;
+      font: 600 14px Inter, system-ui, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .25)
+    }
+
+    @media print {
+      #saveBtn {
+        display: none
+      }
+
+      .screenshot-box {
+        border-style: solid
+      }
+    }
+
+    .key-concept {
+      background: #e8f5e9;
+      border-left: 4px solid #2e7d32;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .key-concept strong {
+      color: #2e7d32;
+    }
+
+    .diagram-box {
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Building a SpinnerAdapter Demo with Custom Adapters, Stable IDs & Lifecycle Handling</h1>
+    <div class="meta">
+      <span>👤 Student Name</span>
+      <span>🆔 Student ID</span>
+      <span>🎓 BSc Computer Science</span>
+      <span>👨‍🏫 Instructor Name</span>
+    </div>
+  </header>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">1·</span> Lab Objective</h2>
+    <div class="objective">
+      <p>The goal of this lab is to build an interactive Android screen that demonstrates <strong>Spinner</strong> with
+        <strong>custom ArrayAdapters</strong>, <strong>stable IDs</strong> for reliable selection tracking, <strong>independent
+          checkbox preferences</strong> in dropdown items, and <strong>lifecycle state restoration</strong> across rotation.
+        By the end of this lab the app can:
+      </p>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">🔄</div>
+        <div class="feature-title">Custom Adapters</div>
+        <div class="feature-desc">Two <code>ArrayAdapter</code> subclasses (<code>MushroomAdapter</code>,
+          <code>CollectionPointAdapter</code>) with separate row/dropdown layouts.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🆔</div>
+        <div class="feature-title">Stable IDs</div>
+        <div class="feature-desc"><code>getItemId()</code> returns domain object ID hash; <code>hasStableIds()</code>
+          = true. Selection survives list reordering.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">☑️</div>
+        <div class="feature-title">Independent Checkboxes</div>
+        <div class="feature-desc">Dropdown items include checkboxes for non-sensitive preferences (edible/collected)
+          independent of single-choice Spinner selection.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔄</div>
+        <div class="feature-title">Lifecycle</div>
+        <div class="feature-desc">Mode, selection IDs, positions, and checkbox states survive rotation via
+          <code>onSaveInstanceState</code>/<code>restoreState</code>.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📭</div>
+        <div class="feature-title">Empty State</div>
+        <div class="feature-desc">Handles empty list gracefully with placeholder text; Spinner and confirmation card
+          hidden when no data.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔀</div>
+        <div class="feature-title">Mode Switch</div>
+        <div class="feature-desc">Toggle between two data sets (Mushroom Types ↔ Collection Points) with independent
+          state per mode.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">2·</span> How the App Works</h2>
+    <p>The app has a single screen with a mode-switch button, a Spinner with a prompt item, and a confirmation card
+      showing the selected item's details. The Spinner uses custom adapters that transform domain objects into Views.</p>
+
+    <div class="workflow">
+      <div class="workflow-step">
+        <div class="step-icon">🚀</div>
+        <div class="step-label">Launch app</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-icon">🔘</div>
+        <div class="step-label">Tap Spinner</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-icon">📋</div>
+        <div class="step-label">Select item</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-icon">☑️</div>
+        <div class="step-label">Toggle checkbox (optional)</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-icon">🔀</div>
+        <div class="step-label">Switch mode</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-icon">🔄</div>
+        <div class="step-label">Rotate device</div>
+      </div>
+    </div>
+
+    <h3>Component Map</h3>
+    <table class="component-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Purpose in this app</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>Spinner</code></td>
+          <td>Dropdown selection widget with prompt at position 0.</td>
+        </tr>
+        <tr>
+          <td><code>MushroomAdapter</code> / <code>CollectionPointAdapter</code></td>
+          <td>Custom <code>ArrayAdapter</code> subclasses with row + dropdown layouts, stable IDs, prompt handling.</td>
+        </tr>
+        <tr>
+          <td><code>MushroomType</code> / <code>CollectionPoint</code></td>
+          <td>Domain models (Parcelable) with stable IDs (scientific name / collection point ID).</td>
+        </tr>
+        <tr>
+          <td><code>CheckBox</code> in dropdown</td>
+          <td>Independent per-item preference (edible/collected) — NOT the Spinner selection.</td>
+        </tr>
+        <tr>
+          <td><code>onSaveInstanceState</code> / <code>restoreState</code></td>
+          <td>Retains mode, selection IDs, positions, and checkbox states across rotation.</td>
+        </tr>
+        <tr>
+          <td><code>Button</code> (mode switch)</td>
+          <td>Swaps adapters and rebuilds Spinner data with prompt.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">3·</span> Key Concept: Adapter vs. Source Collection</h2>
+
+    <div class="key-concept">
+      <strong>💡 Critical distinction:</strong> The <strong>source collection</strong> (<code>List<MushroomType></code>)
+      is separate from the <strong>adapter</strong>. The adapter is a <em>view transformer</em> — it takes domain objects
+      and creates/inflates Views for the Spinner. The adapter manages:
+      <ul>
+        <li>View recycling (<code>convertView</code> pattern via ViewHolder)</li>
+        <li>Binding domain data to specific view layouts (row vs dropdown)</li>
+        <li>The prompt item (position 0) separately from valid choices</li>
+        <li>Stable IDs via <code>getItemId()</code> for reliable selection tracking</li>
+      </ul>
+    </div>
+
+    <div class="diagram-box">
+┌─────────────────────────────────────────────────────────────────┐
+│                    DATA FLOW IN SPINNER ADAPTER                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   List<MushroomType> (source)                                   │
+│          │                                                      │
+│          ▼                                                      │
+│   ┌─────────────────────┐                                       │
+│   │  MushroomAdapter    │  ◄── Manages:                         │
+│   │  extends ArrayAdapter│     • View recycling (ViewHolder)    │
+│   │                     │     • Row layout (getView)             │
+│   │  - rowLayoutRes     │     • Dropdown layout (getDropDownView)│
+│   │  - dropdownLayoutRes│     • Prompt at position 0             │
+│   │  - hasStableIds()   │     • Stable IDs (getItemId)           │
+│   └──────────┬──────────┘                                       │
+│             │                                                  │
+│       ┌─────┴─────┐                                            │
+│       ▼           ▼                                            │
+│  getView()   getDropDownView()                                  │
+│  (closed)    (expanded)                                         │
+│       │           │                                             │
+│       ▼           ▼                                             │
+│  Spinner    Dropdown                                            │
+│  button     list                                                │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+    </div>
+
+    <h3>Why Stable IDs Matter</h3>
+    <p>Without stable IDs, selection is tracked by <strong>position</strong>. If the list reorders (sort, filter, reverse),
+      the item at position 3 might become a different mushroom. With stable IDs:</p>
+
+    <ul>
+      <li><code>getItemId(position)</code> returns the domain object's ID hash (e.g., <code>"agaricus_bisporus".hashCode()</code>)</li>
+      <li><code>hasStableIds()</code> returns <code>true</code></li>
+      <li>On rotation or reorder, <code>findPositionById(adapter, selectedId)</code> finds the correct position</li>
+      <li>Selection persists correctly even if list order changes</li>
+    </ul>
+
+    <div class="tip">
+      <strong>💡 Demo:</strong> Call <code>simulateReorderList()</code> to reverse the list — the selection stays on
+      the same mushroom because it's tracked by stable ID, not position.
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">4·</span> User Interface (<code>activity_main.xml</code>)</h2>
+
+    <h3>4.1 Layout Structure</h3>
+    <p>Uses <code>ConstraintLayout</code> with: mode switch button → Spinner → empty state TextView → confirmation CardView.</p>
+
+    <div class="file-label">activity_main.xml · key components</div>
+    <pre class="code-block"><span class="comment"><!-- Mode selector button --></span>
+<span class="keyword"><Button</span>
+    android:id=<span class="string">"@+id/btn_switch_mode"</span>
+    android:layout_width=<span class="string">"wrap_content"</span>
+    android:layout_height=<span class="string">"wrap_content"</span>
+    android:text=<span class="string">"@string/btn_switch_mode"</span>
+    app:layout_constraintTop_toTopOf=<span class="string">"parent"</span>
+    app:layout_constraintStart_toStartOf=<span class="string">"parent"</span>
+    app:layout_constraintEnd_toEndOf=<span class="string">"parent"</span>
+    android:layout_marginTop=<span class="string">"16dp"</span> <span class="keyword">/></span>
+
+<span class="comment"><!-- Spinner with custom background --></span>
+<span class="keyword"><Spinner</span>
+    android:id=<span class="string">"@+id/spinner_main"</span>
+    android:layout_width=<span class="string">"0dp"</span>
+    android:layout_height=<span class="string">"wrap_content"</span>
+    android:spinnerMode=<span class="string">"dropdown"</span>
+    app:layout_constraintTop_toBottomOf=<span class="string">"@id/btn_switch_mode"</span>
+    app:layout_constraintStart_toStartOf=<span class="string">"parent"</span>
+    app:layout_constraintEnd_toEndOf=<span class="string">"parent"</span>
+    android:layout_marginTop=<span class="string">"24dp"</span>
+    android:padding=<span class="string">"12dp"</span>
+    android:background=<span class="string">"@drawable/spinner_background"</span> <span class="keyword">/></span>
+
+<span class="comment"><!-- Empty state (shown when list empty) --></span>
+<span class="keyword"><TextView</span>
+    android:id=<span class="string">"@+id/tv_empty_state"</span>
+    android:layout_width=<span class="string">"0dp"</span>
+    android:layout_height=<span class="string">"wrap_content"</span>
+    android:text=<span class="string">"@string/empty_list_mushroom"</span>
+    android:visibility=<span class="string">"gone"</span>
+    ... <span class="keyword">/></span>
+
+<span class="comment"><!-- Confirmation CardView --></span>
+<span class="keyword"><androidx.cardview.widget.CardView</span>
+    android:id=<span class="string">"@+id/card_confirmation"</span>
+    android:layout_width=<span class="string">"0dp"</span>
+    android:layout_height=<span class="string">"wrap_content"</span>
+    app:cardElevation=<span class="string">"4dp"</span>
+    app:cardCornerRadius=<span class="string">"8dp"</span>
+    app:layout_constraintTop_toBottomOf=<span class="string">"@id/spinner_main"</span>
+    ...<span class="keyword">></span>
+    <span class="keyword"><LinearLayout</span> ...<span class="keyword">></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_confirmation_title"</span> ... <span class="keyword">/></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_selected_item"</span> ... <span class="keyword">/></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_selected_id"</span> ... <span class="keyword">/></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_position"</span> ... <span class="keyword">/></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_extra_info"</span> ... <span class="keyword">/></span>
+    <span class="keyword"></LinearLayout></span>
+<span class="keyword"></androidx.cardview.widget.CardView></span></pre>
+
+    <h3>4.2 Spinner Row Layout (Closed State)</h3>
+    <p>Simpler layout without checkbox — used by <code>getView()</code>.</p>
+
+    <div class="file-label">spinner_row_mushroom.xml</div>
+    <pre class="code-block"><span class="keyword"><LinearLayout</span> android:orientation=<span class="string">"horizontal"</span> android:padding=<span class="string">"12dp"</span><span class="keyword">></span>
+    <span class="keyword"><LinearLayout</span> android:layout_weight=<span class="string">"1"</span> android:orientation=<span class="string">"vertical"</span><span class="keyword">></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_mushroom_name"</span> android:textSize=<span class="string">"16sp"</span> android:textStyle=<span class="string">"bold"</span> <span class="keyword">/></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_mushroom_scientific"</span> android:textSize=<span class="string">"12sp"</span> <span class="keyword">/></span>
+    <span class="keyword"></LinearLayout></span>
+
+    <span class="comment"><!-- Checkbox hidden in closed state --></span>
+    <span class="keyword"><CheckBox</span>
+        android:id=<span class="string">"@+id/cb_edible"</span>
+        android:visibility=<span class="string">"gone"</span>
+        android:enabled=<span class="string">"false"</span> <span class="keyword">/></span>
+<span class="keyword"></LinearLayout></span></pre>
+
+    <h3>4.3 Spinner Dropdown Layout (Expanded State)</h3>
+    <p>Includes checkbox for independent non-sensitive preference.</p>
+
+    <div class="file-label">spinner_dropdown_mushroom.xml</div>
+    <pre class="code-block"><span class="keyword"><LinearLayout</span> android:orientation=<span class="string">"horizontal"</span> android:padding=<span class="string">"16dp"</span>
+    android:background=<span class="string">"?android:attr/selectableItemBackground"</span><span class="keyword">></span>
+    <span class="keyword"><LinearLayout</span> android:layout_weight=<span class="string">"1"</span> android:orientation=<span class="string">"vertical"</span><span class="keyword">></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_mushroom_name"</span> android:textSize=<span class="string">"16sp"</span> android:textStyle=<span class="string">"bold"</span> <span class="keyword">/></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_mushroom_scientific"</span> android:textSize=<span class="string">"12sp"</span> <span class="keyword">/></span>
+        <span class="keyword"><TextView</span> android:id=<span class="string">"@+id/tv_mushroom_notes"</span> android:textSize=<span class="string">"11sp"</span> android:maxLines=<span class="string">"2"</span> <span class="keyword">/></span>
+    <span class="keyword"></LinearLayout></span>
+
+    <span class="comment"><!-- Checkbox for non-sensitive preference (edible marking) --></span>
+    <span class="comment"><!-- INDEPENDENT of Spinner selection: --></span>
+    <span class="comment"><!-- - Spinner selection = ONE mushroom (radio-like) --></span>
+    <span class="comment"><!-- - Checkbox = per-item preference (can toggle multiple) --></span>
+    <span class="keyword"><CheckBox</span>
+        android:id=<span class="string">"@+id/cb_edible"</span>
+        android:text=<span class="string">"@string/checkbox_edible"</span>
+        android:textSize=<span class="string">"12sp"</span> <span class="keyword">/></span>
+<span class="keyword"></LinearLayout></span></pre>
+
+    <div class="key-concept">
+      <strong>💡 Why the checkbox is INDEPENDENT of selection:</strong> The Spinner enforces <strong>single-choice</strong>
+      (radio behavior — only one item selected). The checkbox represents a <strong>per-item user preference</strong> that
+      doesn't affect which item is selected. You can select "Button Mushroom" but toggle the edible checkbox on
+      "Fly Agaric" independently. This demonstrates: <em>selection ≠ all user interactions with list items</em>.
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">5·</span> Domain Models (<code>MushroomType.java</code>, <code>CollectionPoint.java</code>)</h2>
+
+    <h3>5.1 MushroomType</h3>
+    <p>Immutable domain model with stable ID (scientific name), implements <code>Parcelable</code> for potential
+      bundle/intent passing.</p>
+
+    <div class="file-label">MushroomType.java · core fields</div>
+    <pre class="code-block"><span class="keyword">public class</span> MushroomType <span class="keyword">implements</span> Parcelable {
+
+    @NonNull <span class="keyword">private final</span> String id;          <span class="comment">// Stable identifier (scientific name)</span>
+    @NonNull <span class="keyword">private final</span> String commonName;  <span class="comment">// Display label</span>
+    @NonNull <span class="keyword">private final</span> String scientificName;
+    <span class="keyword">private final</span> <span class="keyword">boolean</span> isEdible;   <span class="comment">// Domain property</span>
+    @NonNull <span class="keyword">private final</span> String notes;
+
+    <span class="comment">// Constructor, Parcelable impl, getters...</span>
+
+    @Override
+    <span class="keyword">public boolean</span> equals(Object o) {
+        <span class="keyword">if</span> (<span class="keyword">this</span> == o) <span class="keyword">return true</span>;
+        <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> MushroomType)) <span class="keyword">return false</span>;
+        MushroomType that = (MushroomType) o;
+        <span class="keyword">return</span> id.equals(that.id); <span class="comment">// Equality by stable ID</span>
+    }
+
+    @Override
+    <span class="keyword">public int</span> hashCode() {
+        <span class="keyword">return</span> id.hashCode();
+    }
+
+    @Override
+    <span class="keyword">public String</span> toString() {
+        <span class="keyword">return</span> commonName; <span class="comment">// Default display for ArrayAdapter</span>
+    }
+}</pre>
+
+    <h3>5.2 CollectionPoint</h3>
+    <p>Mirror structure with stable ID, name, location, active status, and notes.</p>
+
+    <div class="file-label">CollectionPoint.java · core fields</div>
+    <pre class="code-block"><span class="keyword">public class</span> CollectionPoint <span class="keyword">implements</span> Parcelable {
+
+    @NonNull <span class="keyword">private final</span> String id;          <span class="comment">// Stable identifier</span>
+    @NonNull <span class="keyword">private final</span> String name;        <span class="comment">// Display label</span>
+    @NonNull <span class="keyword">private final</span> String location;    <span class="comment">// GPS or address</span>
+    <span class="keyword">private final</span> <span class="keyword">boolean</span> isActive;   <span class="comment">// Domain property</span>
+    @NonNull <span class="keyword">private final</span> String notes;
+
+    <span class="comment">// Constructor, Parcelable impl, getters, equals/hashCode by ID...</span>
+}</pre>
+
+    <div class="tip">
+      <strong>💡 Design note:</strong> Both models use <strong>stable IDs</strong> (not position) for equality and
+      hashCode. This is essential for the adapter's stable ID mechanism to work correctly.
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">6·</span> Custom Adapters</h2>
+
+    <h3>6.1 MushroomAdapter</h3>
+    <p>Extends <code>ArrayAdapter<MushroomType></code> with custom row/dropdown layouts, stable IDs, and checkbox
+      listener.</p>
+
+    <div class="file-label">MushroomAdapter.java · stable IDs</div>
+    <pre class="code-block"><span class="annotation">@Override</span>
+<span class="keyword">public long</span> getItemId(<span class="keyword">int</span> position) {
+    <span class="comment">// Position 0 is the prompt - return NO_ID</span>
+    <span class="keyword">if</span> (position == 0) {
+        <span class="keyword">return</span> AdapterView.NO_ID;
+    }
+    <span class="comment">// Return stable ID from domain object (scientific name hash)</span>
+    MushroomType item = getItem(position);
+    <span class="keyword">return</span> item != <span class="keyword">null</span> ? item.getId().hashCode() : AdapterView.NO_ID;
+}
+
+<span class="annotation">@Override</span>
+<span class="keyword">public boolean</span> hasStableIds() {
+    <span class="keyword">return true</span>; <span class="comment">// Critical: enables reliable selection restoration</span>
+}</pre>
+
+    <div class="file-label">MushroomAdapter.java · getView (closed state)</div>
+    <pre class="code-block"><span class="annotation">@NonNull @Override</span>
+<span class="keyword">public View</span> getView(<span class="keyword">int</span> position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    ViewHolder holder;
+    <span class="keyword">if</span> (convertView == <span class="keyword">null</span>) {
+        convertView = inflater.inflate(rowLayoutRes, parent, <span class="keyword">false</span>);
+        holder = <span class="keyword">new</span> ViewHolder(convertView);
+        convertView.setTag(holder);
+    } <span class="keyword">else</span> {
+        holder = (ViewHolder) convertView.getTag();
+    }
+
+    MushroomType mushroom = getItem(position);
+    <span class="keyword">if</span> (mushroom != <span class="keyword">null</span>) {
+        holder.nameText.setText(mushroom.getCommonName());
+        holder.scientificText.setText(mushroom.getScientificName());
+        <span class="comment">// Hide checkbox in closed state - it's only in dropdown</span>
+        holder.edibleCheckBox.setVisibility(View.GONE);
+    } <span class="keyword">else</span> {
+        <span class="comment">// Prompt item</span>
+        holder.nameText.setText(getContext().getString(R.string.prompt_select_mushroom));
+        holder.scientificText.setText(<span class="string">""</span>);
+        holder.edibleCheckBox.setVisibility(View.GONE);
+    }
+    <span class="keyword">return</span> convertView;
+}</pre>
+
+    <div class="file-label">MushroomAdapter.java · getDropDownView (expanded state)</div>
+    <pre class="code-block"><span class="annotation">@Override</span>
+<span class="keyword">public View</span> getDropDownView(<span class="keyword">int</span> position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    DropDownViewHolder holder;
+    <span class="keyword">if</span> (convertView == <span class="keyword">null</span>) {
+        convertView = inflater.inflate(dropdownLayoutRes, parent, <span class="keyword">false</span>);
+        holder = <span class="keyword">new</span> DropDownViewHolder(convertView);
+        convertView.setTag(holder);
+    } <span class="keyword">else</span> {
+        holder = (DropDownViewHolder) convertView.getTag();
+    }
+
+    MushroomType mushroom = getItem(position);
+    <span class="keyword">if</span> (mushroom != <span class="keyword">null</span>) {
+        holder.nameText.setText(mushroom.getCommonName());
+        holder.scientificText.setText(mushroom.getScientificName());
+        holder.notesText.setText(mushroom.getNotes());
+
+        <span class="comment">// Checkbox for non-sensitive preference (edible marking)</span>
+        <span class="comment">// INDEPENDENT of Spinner selection:</span>
+        <span class="comment">// - Selection chooses ONE mushroom (radio-like behavior)</span>
+        <span class="comment">// - Checkbox is a per-item preference that doesn't affect selection</span>
+        holder.edibleCheckBox.setText(R.string.checkbox_edible);
+        holder.edibleCheckBox.setChecked(mushroom.isEdible());
+        holder.edibleCheckBox.setOnCheckedChangeListener(<span class="keyword">null</span>); <span class="comment">// Clear old listener</span>
+        holder.edibleCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            <span class="keyword">if</span> (edibleToggleListener != <span class="keyword">null</span>) {
+                edibleToggleListener.onEdibleToggled(mushroom, isChecked);
+            }
+        });
+        holder.edibleCheckBox.setVisibility(View.VISIBLE);
+    } <span class="keyword">else</span> {
+        <span class="comment">// Prompt item - disable and style differently</span>
+        holder.nameText.setText(getContext().getString(R.string.prompt_select_mushroom));
+        holder.scientificText.setText(<span class="string">""</span>);
+        holder.notesText.setText(<span class="string">""</span>);
+        holder.edibleCheckBox.setVisibility(View.GONE);
+        convertView.setEnabled(<span class="keyword">false</span>);
+        convertView.setAlpha(0.5f);
+    }
+    <span class="keyword">return</span> convertView;
+}</pre>
+
+    <h3>6.2 CollectionPointAdapter</h3>
+    <p>Mirrors MushroomAdapter structure for consistency — same patterns for stable IDs, prompt handling, and
+      independent checkbox (collected status).</p>
+
+    <div class="warning">
+      <strong>⚠ Common mistake:</strong> Forgetting to call <code>setOnCheckedChangeListener(null)</code> before
+      setting a new listener causes duplicate callbacks due to ViewHolder recycling. Always clear first!
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">7·</span> Activity Logic (<code>MainActivity.java</code>)</h2>
+
+    <h3>7.1 Fields & State Keys</h3>
+    <div class="file-label">MainActivity.java · fields and state keys</div>
+    <pre class="code-block"><span class="comment">// View references</span>
+<span class="keyword">private</span> Spinner spinnerMain;
+<span class="keyword">private</span> TextView tvEmptyState, tvConfirmationTitle, tvSelectedItem, tvSelectedId, tvPosition, tvExtraInfo;
+<span class="keyword">private</span> Button btnSwitchMode;
+<span class="keyword">private</span> CardView cardConfirmation;
+
+<span class="comment">// Data</span>
+<span class="keyword">private</span> List<MushroomType> mushroomList;
+<span class="keyword">private</span> List<CollectionPoint> collectionList;
+<span class="keyword">private</span> MushroomAdapter mushroomAdapter;
+<span class="keyword">private</span> CollectionPointAdapter collectionAdapter;
+
+<span class="comment">// State</span>
+<span class="keyword">private boolean</span> showingMushrooms = <span class="keyword">true</span>;
+<span class="keyword">private</span> String selectedMushroomId = <span class="keyword">null</span>;
+<span class="keyword">private</span> String selectedCollectionId = <span class="keyword">null</span>;
+<span class="keyword">private int</span> selectedMushroomPosition = 0;
+<span class="keyword">private int</span> selectedCollectionPosition = 0;
+<span class="keyword">private boolean</span> mushroomEdiblePreference = <span class="keyword">false</span>;
+<span class="keyword">private boolean</span> collectionCollectedPreference = <span class="keyword">false</span>;
+
+<span class="comment">// Keys for state restoration</span>
+<span class="keyword">private static final</span> String KEY_SHOWING_MUSHROOMS = <span class="string">"showing_mushrooms"</span>;
+<span class="keyword">private static final</span> String KEY_SELECTED_MUSHROOM_ID = <span class="string">"selected_mushroom_id"</span>;
+<span class="keyword">private static final</span> String KEY_SELECTED_COLLECTION_ID = <span class="string">"selected_collection_id"</span>;
+<span class="keyword">private static final</span> String KEY_SELECTED_MUSHROOM_POS = <span class="string">"selected_mushroom_pos"</span>;
+<span class="keyword">private static final</span> String KEY_SELECTED_COLLECTION_POS = <span class="string">"selected_collection_pos"</span>;
+<span class="keyword">private static final</span> String KEY_MUSHROOM_EDIBLE = <span class="string">"mushroom_edible"</span>;
+<span class="keyword">private static final</span> String KEY_COLLECTION_COLLECTED = <span class="string">"collection_collected"</span>;</pre>
+
+    <h3>7.2 onCreate: Init Views, Data, Adapters, Listeners</h3>
+    <div class="file-label">MainActivity.java · onCreate</div>
+    <pre class="code-block"><span class="annotation">@Override</span>
+<span class="keyword">protected void</span> onCreate(Bundle savedInstanceState) {
+    <span class="keyword">super</span>.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    initViews();
+    initData();
+    setupAdapters();
+    setupListeners();
+
+    <span class="comment">// Restore state if rotating</span>
+    <span class="keyword">if</span> (savedInstanceState != <span class="keyword">null</span>) {
+        restoreState(savedInstanceState);
+    }
+
+    <span class="comment">// Initial UI update</span>
+    updateConfirmationView();
+}</pre>
+
+    <h3>7.3 initData: Domain Objects with Stable IDs</h3>
+    <div class="file-label">MainActivity.java · initData</div>
+    <pre class="code-block"><span class="keyword">private void</span> initData() {
+    <span class="comment">// Mushroom types with stable IDs (scientific names)</span>
+    mushroomList = <span class="keyword">new</span> ArrayList<>();
+    mushroomList.add(<span class="keyword">new</span> MushroomType(<span class="string">"agaricus_bisporus"</span>, <span class="string">"Button Mushroom"</span>,
+            <span class="string">"Agaricus bisporus"</span>, <span class="keyword">true</span>, <span class="string">"Common cultivated mushroom"</span>));
+    mushroomList.add(<span class="keyword">new</span> MushroomType(<span class="string">"pleurotus_ostreatus"</span>, <span class="string">"Oyster Mushroom"</span>,
+            <span class="string">"Pleurotus ostreatus"</span>, <span class="keyword">true</span>, <span class="string">"Edible, fan-shaped caps"</span>));
+    mushroomList.add(<span class="keyword">new</span> MushroomType(<span class="string">"lentinula_edodes"</span>, <span class="string">"Shiitake"</span>,
+            <span class="string">"Lentinula edodes"</span>, <span class="keyword">true</span>, <span class="string">"Popular in Asian cuisine"</span>));
+    mushroomList.add(<span class="keyword">new</span> MushroomType(<span class="string">"amanita_muscaria"</span>, <span class="string">"Fly Agaric"</span>,
+            <span class="string">"Amanita muscaria"</span>, <span class="keyword">false</span>, <span class="string">"TOXIC - iconic red cap with white spots"</span>));
+    mushroomList.add(<span class="keyword">new</span> MushroomType(<span class="string">"cantharellus_cibarius"</span>, <span class="string">"Chanterelle"</span>,
+            <span class="string">"Cantharellus cibarius"</span>, <span class="keyword">true</span>, <span class="string">"Prized edible, fruity aroma"</span>));
+    mushroomList.add(<span class="keyword">new</span> MushroomType(<span class="string">"morchella_esculenta"</span>, <span class="string">"Morel"</span>,
+            <span class="string">"Morchella esculenta"</span>, <span class="keyword">true</span>, <span class="string">"Honeycomb cap, spring delicacy"</span>));
+
+    <span class="comment">// Collection points with stable IDs</span>
+    collectionList = <span class="keyword">new</span> ArrayList<>();
+    collectionList.add(<span class="keyword">new</span> CollectionPoint(<span class="string">"cp_001"</span>, <span class="string">"Forest Trail North"</span>,
+            <span class="string">"40.7128° N, 74.0060° W"</span>, <span class="keyword">true</span>, <span class="string">"Mixed deciduous forest"</span>));
+    collectionList.add(<span class="keyword">new</span> CollectionPoint(<span class="string">"cp_002"</span>, <span class="string">"Riverbank East"</span>,
+            <span class="string">"34.0522° N, 118.2437° W"</span>, <span class="keyword">true</span>, <span class="string">"Riparian zone, damp soil"</span>));
+    collectionList.add(<span class="keyword">new</span> CollectionPoint(<span class="string">"cp_003"</span>, <span class="string">"Meadow Clearing"</span>,
+            <span class="string">"41.8781° N, 87.6298° W"</span>, <span class="keyword">false</span>, <span class="string">"Open grassland, seasonal"</span>));
+    collectionList.add(<span class="keyword">new</span> CollectionPoint(<span class="string">"cp_004"</span>, <span class="string">"Pine Plantation"</span>,
+            <span class="string">"29.7604° N, 95.3698° W"</span>, <span class="keyword">true</span>, <span class="string">"Coniferous, acidic soil"</span>));
+    collectionList.add(<span class="keyword">new</span> CollectionPoint(<span class="string">"cp_005"</span>, <span class="string">"Urban Park"</span>,
+            <span class="string">"39.9526° N, 75.1652° W"</span>, <span class="keyword">false</span>, <span class="string">"Disturbed habitat, edge effects"</span>));
+}</pre>
+
+    <h3>7.4 setupAdapters: Build Adapters with Prompt</h3>
+    <div class="file-label">MainActivity.java · setupAdapters & rebuildSpinnerData</div>
+    <pre class="code-block"><span class="keyword">private void</span> setupAdapters() {
+    mushroomAdapter = <span class="keyword">new</span> MushroomAdapter(
+            <span class="keyword">this</span>, R.layout.spinner_row_mushroom, R.layout.spinner_dropdown_mushroom,
+            <span class="keyword">new</span> ArrayList<>() <span class="comment">// Start empty, we'll add prompt + items</span>
+    );
+    mushroomAdapter.setOnEdibleToggleListener((mushroom, isChecked) -> {
+        mushroomEdiblePreference = isChecked;
+        Toast.makeText(<span class="keyword">this</span>, <span class="string">"Edible preference for "</span> + mushroom.getCommonName() + <span class="string">": "</span> + isChecked,
+                Toast.LENGTH_SHORT).show();
+    });
+
+    collectionAdapter = <span class="keyword">new</span> CollectionPointAdapter(
+            <span class="keyword">this</span>, R.layout.spinner_row_collection, R.layout.spinner_dropdown_collection,
+            <span class="keyword">new</span> ArrayList<>()
+    );
+    collectionAdapter.setOnCollectedToggleListener((point, isChecked) -> {
+        collectionCollectedPreference = isChecked;
+        Toast.makeText(<span class="keyword">this</span>, <span class="string">"Collected status for "</span> + point.getName() + <span class="string">": "</span> + isChecked,
+                Toast.LENGTH_SHORT).show();
+    });
+
+    <span class="comment">// Add prompt item (position 0) + data items</span>
+    rebuildSpinnerData();
+
+    spinnerMain.setAdapter(showingMushrooms ? mushroomAdapter : collectionAdapter);
+}
+
+<span class="comment">/**
+ * Rebuilds spinner data with prompt at position 0.
+ * This demonstrates: adapter manages prompt separately from valid choices.
+ */</span>
+<span class="keyword">private void</span> rebuildSpinnerData() {
+    <span class="keyword">if</span> (showingMushrooms) {
+        mushroomAdapter.clear();
+        <span class="comment">// Add prompt as first item (null = prompt)</span>
+        mushroomAdapter.add(<span class="keyword">null</span>);
+        <span class="comment">// Add actual data</span>
+        <span class="keyword">for</span> (MushroomType m : mushroomList) {
+            mushroomAdapter.add(m);
+        }
+        <span class="comment">// Restore selection by stable ID</span>
+        <span class="keyword">if</span> (selectedMushroomId != <span class="keyword">null</span>) {
+            <span class="keyword">int</span> pos = findPositionById(mushroomAdapter, selectedMushroomId);
+            <span class="keyword">if</span> (pos > 0) {
+                spinnerMain.setSelection(pos);
+                selectedMushroomPosition = pos;
+            } <span class="keyword">else</span> {
+                <span class="comment">// Previously selected item no longer available</span>
+                selectedMushroomId = <span class="keyword">null</span>;
+                selectedMushroomPosition = 0;
+                spinnerMain.setSelection(0);
+            }
+        }
+        updateEmptyState(mushroomList.isEmpty());
+    } <span class="keyword">else</span> {
+        <span class="comment">// Same pattern for collection points...</span>
+    }
+    mushroomAdapter.notifyDataSetChanged();
+    collectionAdapter.notifyDataSetChanged();
+}</pre>
+
+    <h3>7.5 Selection Listener: Track by Stable ID</h3>
+    <div class="file-label">MainActivity.java · onItemSelectedListener</div>
+    <pre class="code-block"><span class="keyword">private void</span> setupListeners() {
+    spinnerMain.setOnItemSelectedListener(<span class="keyword">new</span> AdapterView.OnItemSelectedListener() {
+        <span class="annotation">@Override</span>
+        <span class="keyword">public void</span> onItemSelected(AdapterView<?> parent, View view, <span class="keyword">int</span> position, <span class="keyword">long</span> id) {
+            <span class="comment">// Ignore prompt selection (position 0 or NO_ID)</span>
+            <span class="keyword">if</span> (position == 0 || id == AdapterView.NO_ID) {
+                clearSelection();
+                <span class="keyword">return</span>;
+            }
+
+            <span class="keyword">if</span> (showingMushrooms) {
+                MushroomType selected = mushroomAdapter.getItem(position);
+                <span class="keyword">if</span> (selected != <span class="keyword">null</span>) {
+                    selectedMushroomId = selected.getId();      <span class="comment">// Store STABLE ID</span>
+                    selectedMushroomPosition = position;        <span class="comment">// Store position for display</span>
+                    updateConfirmationView();
+                }
+            } <span class="keyword">else</span> {
+                CollectionPoint selected = collectionAdapter.getItem(position);
+                <span class="keyword">if</span> (selected != <span class="keyword">null</span>) {
+                    selectedCollectionId = selected.getId();    <span class="comment">// Store STABLE ID</span>
+                    selectedCollectionPosition = position;
+                    updateConfirmationView();
+                }
+            }
+        }
+
+        <span class="annotation">@Override</span>
+        <span class="keyword">public void</span> onNothingSelected(AdapterView<?> parent) {
+            clearSelection();
+        }
+    });
+
+    <span class="comment">// Mode switch button</span>
+    btnSwitchMode.setOnClickListener(v -> {
+        showingMushrooms = !showingMushrooms;
+        btnSwitchMode.setText(showingMushrooms ?
+                R.string.btn_switch_mode : R.string.btn_switch_mode_mushroom);
+        tvEmptyState.setText(showingMushrooms ?
+                R.string.empty_list_mushroom : R.string.empty_list_collection);
+
+        <span class="comment">// Swap adapter</span>
+        spinnerMain.setAdapter(showingMushrooms ? mushroomAdapter : collectionAdapter);
+        rebuildSpinnerData();
+        updateConfirmationView();
+    });
+}</pre>
+
+    <h3>7.6 State Restoration: onSaveInstanceState & restoreState</h3>
+    <div class="file-label">MainActivity.java · onSaveInstanceState</div>
+    <pre class="code-block"><span class="annotation">@Override</span>
+<span class="keyword">protected void</span> onSaveInstanceState(@NonNull Bundle outState) {
+    <span class="keyword">super</span>.onSaveInstanceState(outState);
+    outState.putBoolean(KEY_SHOWING_MUSHROOMS, showingMushrooms);
+    outState.putString(KEY_SELECTED_MUSHROOM_ID, selectedMushroomId);
+    outState.putString(KEY_SELECTED_COLLECTION_ID, selectedCollectionId);
+    outState.putInt(KEY_SELECTED_MUSHROOM_POS, selectedMushroomPosition);
+    outState.putInt(KEY_SELECTED_COLLECTION_POS, selectedCollectionPosition);
+    outState.putBoolean(KEY_MUSHROOM_EDIBLE, mushroomEdiblePreference);
+    outState.putBoolean(KEY_COLLECTION_COLLECTED, collectionCollectedPreference);
+}</pre>
+
+    <div class="file-label">MainActivity.java · restoreState</div>
+    <pre class="code-block"><span class="keyword">private void</span> restoreState(@NonNull Bundle savedInstanceState) {
+    showingMushrooms = savedInstanceState.getBoolean(KEY_SHOWING_MUSHROOMS, <span class="keyword">true</span>);
+    selectedMushroomId = savedInstanceState.getString(KEY_SELECTED_MUSHROOM_ID);
+    selectedCollectionId = savedInstanceState.getString(KEY_SELECTED_COLLECTION_ID);
+    selectedMushroomPosition = savedInstanceState.getInt(KEY_SELECTED_MUSHROOM_POS, 0);
+    selectedCollectionPosition = savedInstanceState.getInt(KEY_SELECTED_COLLECTION_POS, 0);
+    mushroomEdiblePreference = savedInstanceState.getBoolean(KEY_MUSHROOM_EDIBLE, <span class="keyword">false</span>);
+    collectionCollectedPreference = savedInstanceState.getBoolean(KEY_COLLECTION_COLLECTED, <span class="keyword">false</span>);
+
+    btnSwitchMode.setText(showingMushrooms ?
+            R.string.btn_switch_mode : R.string.btn_switch_mode_mushroom);
+}</pre>
+
+    <div class="tip">
+      <strong>💡 Note:</strong> We store <strong>stable IDs</strong> (strings) not positions. On restore,
+      <code>rebuildSpinnerData()</code> calls <code>findPositionById()</code> to find the current position of the
+      previously selected item. This works even if the list was reordered!
+    </div>
+
+    <h3>7.7 Empty State Handling</h3>
+    <div class="file-label">MainActivity.java · updateEmptyState</div>
+    <pre class="code-block"><span class="keyword">private void</span> updateEmptyState(<span class="keyword">boolean</span> isEmpty) {
+    tvEmptyState.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    spinnerMain.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+    cardConfirmation.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+}</pre>
+
+    <div class="file-label">MainActivity.java · simulateEmptyList (demo method)</div>
+    <pre class="code-block"><span class="comment">/**
+ * Demo method to simulate empty list (for testing requirement #4)
+ * Call this to demonstrate empty state handling
+ */</span>
+<span class="keyword">public void</span> simulateEmptyList() {
+    <span class="keyword">if</span> (showingMushrooms) {
+        mushroomList.clear();
+    } <span class="keyword">else</span> {
+        collectionList.clear();
+    }
+    rebuildSpinnerData();
+}</pre>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">8·</span> Themes & Dependencies</h2>
+
+    <div class="file-label">themes.xml</div>
+    <pre class="code-block"><span class="keyword"><resources</span> xmlns:tools=<span class="string">"http://schemas.android.com/tools"</span><span class="keyword">></span>
+    <span class="comment"><!-- Base application theme. --></span>
+    <span class="keyword"><style name=</span><span class="string">"Theme.SpinnerAdapter"</span> parent=<span class="string">"Theme.MaterialComponents.DayNight.DarkActionBar"</span><span class="keyword">></span>
+        <span class="keyword"><item name=</span><span class="string">"colorPrimary"</span><span class="keyword">></span>@color/purple_700<span class="keyword"></item></span>
+        <span class="keyword"><item name=</span><span class="string">"colorPrimaryVariant"</span><span class="keyword">></span>@color/purple_700<span class="keyword"></item></span>
+        <span class="keyword"><item name=</span><span class="string">"colorOnPrimary"</span><span class="keyword">></span>@color/white<span class="keyword"></item></span>
+        <span class="keyword"><item name=</span><span class="string">"colorSecondary"</span><span class="keyword">></span>@color/teal_200<span class="keyword"></item></span>
+        <span class="keyword"><item name=</span><span class="string">"colorSecondaryVariant"</span><span class="keyword">></span>@color/teal_700<span class="keyword"></item></span>
+        <span class="keyword"><item name=</span><span class="string">"colorOnSecondary"</span><span class="keyword">></span>@color/black<span class="keyword"></item></span>
+        <span class="keyword"><item name=</span><span class="string">"android:statusBarColor"</span> tools:targetApi=<span class="string">"l"</span><span class="keyword">></span>?attr/colorPrimaryVariant<span class="keyword"></item></span>
+    <span class="keyword"></style></span>
+<span class="keyword"></resources></span></pre>
+
+    <div class="file-label">build.gradle.kts (app module) — key dependencies</div>
+    <pre class="code-block"><span class="keyword">dependencies</span> {
+    implementation(<span class="string">"androidx.appcompat:appcompat:1.6.1"</span>)
+    implementation(<span class="string">"com.google.android.material:material:1.11.0"</span>)
+    implementation(<span class="string">"androidx.constraintlayout:constraintlayout:2.1.4"</span>)
+    implementation(<span class="string">"androidx.cardview:cardview:1.0.0"</span>)
+    <span class="comment">// RecyclerView not needed for this lab (Spinner only)</span>
+}</pre>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">9·</span> Execution & Evidence — Screenshot Guide</h2>
+
+    <div class="screenshot-instruction">
+      <strong>📸 How to capture screenshots:</strong> Run the app on an emulator (API 34) or physical device. Use
+      <kbd>Ctrl</kbd>+<kbd>S</kbd> (Linux/Windows) or <kbd>Cmd</kbd>+<kbd>S</kbd> (Mac) in Android Studio's Device
+      Manager, or press <kbd>Power</kbd>+<kbd>Volume Down</kbd> on a physical device. Save screenshots as
+      <code>step-1-initial.png</code>, <code>step-2-selection.png</code>, etc., in a
+      <code>screenshots/</code> folder alongside this HTML file. Then replace each placeholder image below.
+    </div>
+
+    <div class="step-grid">
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-card-header">Step 1 — Initial Launch (Mushroom Mode)</div>
+        <div class="step-card-body">
+          <div class="screenshot-box">
+            <span class="screenshot-label" style="display: none;">📷 INSERT SCREENSHOT</span>
+            <img src="" alt="Step 1: Initial launch" class="screenshot-img" style="display: block;">
+            <p class="screenshot-placeholder" id="step1-placeholder" style="display: block;">
+              <strong>What to capture:</strong> App just launched, showing "Switch to Collection Points" button, Spinner
+              with prompt "Select a mushroom type…", empty state hidden, confirmation card showing "No selection made".<br>
+              <em>File: <code>screenshots/step-1-initial.png</code></em>
+            </p>
+          </div>
+          <p style="font-size:13px; color:#666;">Evidence ID: <code>launch-initial-001</code></p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-card-header">Step 2 — Spinner Expanded (Dropdown)</div>
+        <div class="step-card-body">
+          <div class="screenshot-box">
+            <span class="screenshot-label" style="display: none;">📷 INSERT SCREENSHOT</span>
+            <img src="" alt="Step 2: Dropdown expanded" class="screenshot-img" style="display: block;">
+            <p class="screenshot-placeholder" id="step2-placeholder" style="display: block;">
+              <strong>What to capture:</strong> Tap Spinner — dropdown shows 6 mushroom types + prompt at top (disabled,
+              50% alpha). Each item shows common name, scientific name, notes, and "Mark as edible" checkbox.<br>
+              <em>File: <code>screenshots/step-2-dropdown.png</code></em>
+            </p>
+          </div>
+          <p style="font-size:13px; color:#666;">Evidence ID: <code>dropdown-expanded-002</code></p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-card-header">Step 3 — Item Selected + Checkbox Toggled</div>
+        <div class="step-card-body">
+          <div class="screenshot-box">
+            <span class="screenshot-label" style="display: none;">📷 INSERT SCREENSHOT</span>
+            <img src="" alt="Step 3: Selection confirmed" class="screenshot-img" style="display: block;">
+            <p class="screenshot-placeholder" id="step3-placeholder" style="display: block;">
+              <strong>What to capture:</strong> Select "Fly Agaric" (toxic), toggle its checkbox. Confirmation card shows:
+              "Mushroom: Fly Agaric", "Selected ID: amanita_muscaria", "Position: 4", "Edible: No | Notes: TOXIC...".
+              Toast appears: "Edible preference for Fly Agaric: true".<br>
+              <em>File: <code>screenshots/step-3-selection.png</code></em>
+            </p>
+          </div>
+          <p style="font-size:13px; color:#666;">Evidence ID: <code>selection-confirmed-003</code></p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card">
+        <div class="step-card-header">Step 4 — Switch to Collection Points Mode</div>
+        <div class="step-card-body">
+          <div class="screenshot-box">
+            <span class="screenshot-label" style="display: none;">📷 INSERT SCREENSHOT</span>
+            <img src="" alt="Step 4: Mode switched" class="screenshot-img" style="display: block;">
+            <p class="screenshot-placeholder" id="step4-placeholder" style="display: block;">
+              <strong>What to capture:</strong> Tap "Switch to Mushroom Types" button. Spinner now shows "Select a
+              collection point…", dropdown has 5 collection points with "Mark as collected" checkboxes. Button text
+              changed. Mushroom selection state preserved internally.<br>
+              <em>File: <code>screenshots/step-4-mode-switch.png</code></em>
+            </p>
+          </div>
+          <p style="font-size:13px; color:#666;">Evidence ID: <code>mode-switch-004</code></p>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-card">
+        <div class="step-card-header">Step 5 — Rotation (State Restored)</div>
+        <div class="step-card-body">
+          <div class="screenshot-box">
+            <img src="" alt="Step 5a: Before rotation" class="screenshot-img" style="display: block; max-height: 200px;">
+            <p class="screenshot-placeholder" id="step5a-placeholder" style="display: block;">
+              <strong>What to capture (5a — BEFORE rotation):</strong> Select "Riverbank East" in Collection mode,
+              toggle its checkbox. Note the selection details.<br>
+              <em>File: <code>screenshots/step-5-rotation-before.png</code></em>
+            </p>
+          </div>
+          <div class="screenshot-box" style="margin-top:8px;">
+            <img src="" alt="Step 5b: After rotation" class="screenshot-img" style="display: block; max-height: 200px;">
+            <p class="screenshot-placeholder" id="step5b-placeholder" style="display: block;">
+              <strong>What to capture (5b — AFTER rotation):</strong> Rotate device (portrait ↔ landscape). Mode,
+              selection ("Riverbank East"), checkbox state, and confirmation card all restored identically.<br>
+              <em>File: <code>screenshots/step-5-rotation-after.png</code></em>
+            </p>
+          </div>
+          <p style="font-size:13px; color:#666;">Evidence ID: <code>rotation-test-005</code></p>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step-card">
+        <div class="step-card-header">Step 6 — List Reorder (Stable ID Demo)</div>
+        <div class="step-card-body">
+          <div class="screenshot-box">
+            <img src="" alt="Step 6a: Before reorder" class="screenshot-img" style="display: block; max-height: 200px;">
+            <p class="screenshot-placeholder" id="step6a-placeholder" style="display: block;">
+              <strong>What to capture (6a — BEFORE reorder):</strong> In Mushroom mode, select "Chanterelle" (position 5).
+              Note position in confirmation card.<br>
+              <em>File: <code>screenshots/step-6-reorder-before.png</code></em>
+            </p>
+          </div>
+          <div class="screenshot-box" style="margin-top:8px;">
+            <img src="" alt="Step 6b: After reorder" class="screenshot-img" style="display: block; max-height: 200px;">
+            <p class="screenshot-placeholder" id="step6b-placeholder" style="display: block;">
+              <strong>What to capture (6b — AFTER reorder):</strong> Call <code>simulateReorderList()</code> (add a
+              debug button or use Logcat). List reversed — "Chanterelle" now at position 2. Selection STILL on
+              Chanterelle (stable ID), position updated in confirmation card. Toast: "List reordered - selection
+              preserved via stable ID!"<br>
+              <em>File: <code>screenshots/step-6-reorder-after.png</code></em>
+            </p>
+          </div>
+          <p style="font-size:13px; color:#666;">Evidence ID: <code>stable-id-demo-006</code></p>
+        </div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="step-card">
+        <div class="step-card-header">Step 7 — Empty State</div>
+        <div class="step-card-body">
+          <div class="screenshot-box">
+            <span class="screenshot-label" style="display: none;">📷 INSERT SCREENSHOT</span>
+            <img src="" alt="Step 7: Empty state" class="screenshot-img" style="display: block;">
+            <p class="screenshot-placeholder" id="step7-placeholder" style="display: block;">
+              <strong>What to capture:</strong> Call <code>simulateEmptyList()</code>. Spinner and confirmation card
+              hidden, empty state TextView visible: "No mushroom types available" (or collection equivalent).<br>
+              <em>File: <code>screenshots/step-7-empty-state.png</code></em>
+            </p>
+          </div>
+          <p style="font-size:13px; color:#666;">Evidence ID: <code>empty-state-007</code></p>
+        </div>
+      </div>
+    </div>
+
+    <hr style="margin: 40px 0;">
+
+    <h3>📋 Screenshot Checklist</h3>
+    <table class="validation-table">
+      <thead>
+        <tr>
+          <th>Step</th>
+          <th>Filename</th>
+          <th>What It Proves</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><code>step-1-initial.png</code></td>
+          <td>App launches correctly with Material theme, prompt shows</td>
+          <td class="pass">⬜ Pending</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><code>step-2-dropdown.png</code></td>
+          <td>Custom dropdown layout with checkboxes renders correctly</td>
+          <td class="pass">⬜ Pending</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><code>step-3-selection.png</code></td>
+          <td>Selection updates confirmation card; checkbox independent</td>
+          <td class="pass">⬜ Pending</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><code>step-4-mode-switch.png</code></td>
+          <td>Mode switch swaps adapters, preserves per-mode state</td>
+          <td class="pass">⬜ Pending</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><code>step-5-rotation-before.png</code>, <code>step-5-rotation-after.png</code></td>
+          <td>Full state (mode, selection, checkboxes) survives rotation</td>
+          <td class="pass">⬜ Pending</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><code>step-6-reorder-before.png</code>, <code>step-6-reorder-after.png</code></td>
+          <td>Stable IDs preserve selection across list reordering</td>
+          <td class="pass">⬜ Pending</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><code>step-7-empty-state.png</code></td>
+          <td>Empty state handled gracefully</td>
+          <td class="pass">⬜ Pending</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      <strong>💡 Tip:</strong> After taking screenshots, create a <code>screenshots/</code> folder next to this HTML
+      file and place all PNG files there. Then open this HTML in a browser — the images will appear automatically. For
+      PDF submission, use your browser's "Print → Save as PDF" with "Background graphics" enabled.
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">10·</span> Lifecycle Trace & Explanation</h2>
+    <p>Predicted vs observed lifecycle sequence for each case:</p>
+
+    <table class="validation-table">
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Predicted Sequence</th>
+          <th>Observed (Logcat)</th>
+          <th>Explanation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cold launch</td>
+          <td>onCreate → onStart → onResume</td>
+          <td>Matches</td>
+          <td>Fresh process, no savedInstanceState, default state (mushroom mode, no selection)</td>
+        </tr>
+        <tr>
+          <td>Rotation</td>
+          <td>onPause → onStop → onSaveInstanceState → onDestroy → onCreate → onStart → onResume</td>
+          <td>Matches</td>
+          <td>Activity recreated; savedInstanceState non-null → restoreState() called → rebuildSpinnerData() restores selection by stable ID</td>
+        </tr>
+        <tr>
+          <td>Mode switch</td>
+          <td>onClick → setAdapter → rebuildSpinnerData</td>
+          <td>Matches</td>
+          <td>No lifecycle events; just adapter swap. Per-mode state (selection IDs, checkbox prefs) preserved in fields.</td>
+        </tr>
+        <tr>
+          <td>Process restart (swipe from recents)</td>
+          <td>onPause → onStop → onDestroy → (process dies) → onCreate → onStart → onResume</td>
+          <td>Matches</td>
+          <td>New process, savedInstanceState is null → all state reset to defaults</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>What survives what?</h3>
+    <ul>
+      <li><strong>Mode (showingMushrooms):</strong> saved in <code>onSaveInstanceState</code> → survives rotation,
+        process restart loses it.</li>
+      <li><strong>Selection (stable IDs):</strong> saved in <code>onSaveInstanceState</code> → survives rotation;
+        restored via <code>findPositionById()</code> in <code>rebuildSpinnerData()</code>.</li>
+      <li><strong>Checkbox preferences:</strong> saved in <code>onSaveInstanceState</code> → survives rotation.</li>
+      <li><strong>Per-mode state:</strong> Both modes maintain independent selection IDs and checkbox states in fields
+        — switching modes doesn't lose the other mode's state.</li>
+      <li><strong>In-memory domain lists:</strong> Survive rotation (process alive); <strong>do not survive</strong>
+        process restart.</li>
+    </ul>
+
+    <div class="warning">
+      <strong>⚠ Key distinction:</strong> Stable IDs allow selection to survive <em>reordering</em> within the same
+      process. They do <em>not</em> survive process death — for that you'd need persistent storage (Room,
+      SharedPreferences). This lab demonstrates in-memory state management only.
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">11·</span> Design Choices, Corrections, Limitations</h2>
+
+    <h3>Design Choice 1: Custom ArrayAdapter (not RecyclerView)</h3>
+    <p><strong>Reasoning:</strong> Spinner is the appropriate widget for single-choice dropdown selection. RecyclerView
+      would be overkill and doesn't provide the native dropdown UX. ArrayAdapter with custom layouts demonstrates the
+      adapter pattern cleanly.</p>
+
+    <h3>Design Choice 2: Stable IDs via domain object ID hash</h3>
+    <p><strong>Reasoning:</strong> Using <code>item.getId().hashCode()</code> in <code>getItemId()</code> with
+      <code>hasStableIds() = true</code> is the standard Android pattern for reliable selection. The domain models
+      implement <code>equals()</code>/<code>hashCode()</code> by ID for consistency.</p>
+
+    <h3>Design Choice 3: Independent checkboxes in dropdown</h3>
+    <p><strong>Reasoning:</strong> Demonstrates that list item interactions ≠ selection. The checkbox is a per-item
+      preference (metadata), while Spinner enforces single-choice. This mirrors real-world patterns like "mark as
+      favorite" or "mark as read" alongside a primary selection.</p>
+
+    <h3>Defect Corrected: Prompt item handling</h3>
+    <p><strong>Original bug:</strong> Early version treated prompt as selectable item, causing crashes when
+      <code>getItem(position)</code> returned null. <strong>Correction:</strong> Prompt added as <code>null</code> at
+      position 0; <code>getItemId(0)</code> returns <code>NO_ID</code>; <code>onItemSelected</code> ignores position 0
+      and <code>NO_ID</code>; prompt disabled and styled at 50% alpha in dropdown.</p>
+
+    <h3>Limitation: No persistent storage</h3>
+    <p>All state (selections, checkboxes, mode) is in-memory and survives only rotation (via Bundle), not process
+      restart. In a production app, selections and preferences would be persisted to Room/SharedPreferences and
+      observed via LiveData/Flow.</p>
+
+    <h3>Limitation: Checkbox state not visually restored in dropdown</h3>
+    <p>The checkbox preference is saved/restored in the Activity field and shown via Toast, but the dropdown ViewHolder
+      doesn't re-read the preference when recycled. A full implementation would store preferences in the domain model
+      or a separate map and bind in <code>getDropDownView()</code>.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2><span class="section-number">12·</span> Relation to Real-World Apps</h2>
+    <ul>
+      <li><strong>Settings screens:</strong> Spinner for single-choice settings (theme, language, sort order) with
+        stable IDs so selection survives config changes.</li>
+      <li><strong>Forms with dependent dropdowns:</strong> Country → State/Province spinners where stable IDs ensure
+        correct cascading selection.</li>
+      <li><strong>Product variant selection:</strong> Size/color spinners in e-commerce — stable IDs map to SKU.</li>
+      <li><strong>Filter/sort controls:</strong> Toolbar spinners where selection persists across navigation.</li>
+      <li><strong>Metadata tagging:</strong> Checkboxes in dropdowns for "mark as favorite", "mark as read", "archive"
+        — independent of primary selection.</li>
+    </ul>
+  </section>
+
+  <hr>
+
+  <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #666; font-size: 14px;">
+    <p><strong>Lab_04 — SpinnerAdapter: Custom Adapters, Stable IDs & Lifecycle</strong></p>
+    <p>Student Name | Student ID | BSc Computer Science | Course Code</p>
+    <p>Submitted: 18 November 2026, 11:59 p.m. EAT</p>
+    <p>Environment: Android Studio Koala | Emulator API 34 | compileSdk 34 | minSdk 24</p>
+    <p>Evidence IDs: <code>launch-initial-001</code>, <code>dropdown-expanded-002</code>,
+      <code>selection-confirmed-003</code>, <code>mode-switch-004</code>, <code>rotation-test-005</code>,
+      <code>stable-id-demo-006</code>, <code>empty-state-007</code>
+    </p>
+    <p>AI assistance: Used for HTML documentation generation; code written manually; logic verified by running on
+      emulator.</p>
+  </footer>
+
+  <script>
+    (function () {
+      document.querySelectorAll('.screenshot-box').forEach(function (box) {
+        var img = box.querySelector('img'); if (!img) return;
+        var ph = box.querySelector('.screenshot-placeholder'), lb = box.querySelector('.screenshot-label');
+        function reveal() { img.style.display = 'block'; if (ph) ph.style.display = 'none'; if (lb) lb.style.display = 'none'; }
+        // Show the image when screenshots/<name>.png exists next to this file
+        if (img.complete && img.naturalWidth > 0) reveal();
+        img.addEventListener('load', reveal);
+        var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.hidden = true; inp.setAttribute('data-ins', '');
+        box.appendChild(inp);
+        function load(file) {
+          if (!file || file.type.indexOf('image/') !== 0) return;
+          var r = new FileReader(); r.onload = function () { img.src = r.result; reveal(); }; r.readAsDataURL(file);
+        }
+        box.addEventListener('click', function (e) { if (e.target !== inp) inp.click(); });
+        inp.addEventListener('change', function () { load(inp.files[0]); inp.value = ''; });
+        box.addEventListener('dragover', function (e) { e.preventDefault(); box.classList.add('over'); });
+        box.addEventListener('dragleave', function () { box.classList.remove('over'); });
+        box.addEventListener('drop', function (e) { e.preventDefault(); box.classList.remove('over'); load(e.dataTransfer.files[0]); });
+      });
+      var b = document.createElement('button'); b.id = 'saveBtn'; b.type = 'button'; b.textContent = 'Save HTML with screenshots';
+      b.addEventListener('click', function () {
+        var c = document.documentElement.cloneNode(true);
+        c.querySelectorAll('#saveBtn,[data-ins]').forEach(function (n) { n.remove(); });
+        var blob = new Blob(['<!DOCTYPE html>\n' + c.outerHTML], { type: 'text/html' });
+        var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'SpinnerAdapter_Lab_Walkthrough_with_screenshots.html';
+        document.body.appendChild(a); a.click(); a.remove();
+      });
+      document.body.appendChild(b);
+    })();
+  </script>
+
+</body>
+
+</html>
