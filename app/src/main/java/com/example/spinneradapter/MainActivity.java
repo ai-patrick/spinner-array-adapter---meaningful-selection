@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvSelectedId;
     private TextView tvPosition;
     private TextView tvExtraInfo;
-    private TextView tvExplanation;
     private Button btnSwitchMode;
     private androidx.cardview.widget.CardView cardConfirmation;
 
@@ -83,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Initial UI update
         updateConfirmationView();
-        updateExplanation();
     }
 
     private void initViews() {
@@ -94,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         tvSelectedId = findViewById(R.id.tv_selected_id);
         tvPosition = findViewById(R.id.tv_position);
         tvExtraInfo = findViewById(R.id.tv_extra_info);
-        tvExplanation = findViewById(R.id.tv_explanation);
         btnSwitchMode = findViewById(R.id.btn_switch_mode);
         cardConfirmation = findViewById(R.id.card_confirmation);
     }
@@ -141,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
             mushroomEdiblePreference = isChecked;
             Toast.makeText(this, "Edible preference for " + mushroom.getCommonName() + ": " + isChecked,
                     Toast.LENGTH_SHORT).show();
-            updateExplanation();
         });
 
         // CollectionPointAdapter
@@ -155,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
             collectionCollectedPreference = isChecked;
             Toast.makeText(this, "Collected status for " + point.getName() + ": " + isChecked,
                     Toast.LENGTH_SHORT).show();
-            updateExplanation();
         });
 
         // Add prompt item (position 0) + data items
@@ -256,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
                         updateConfirmationView();
                     }
                 }
-                updateExplanation();
             }
 
             @Override
@@ -277,7 +271,6 @@ public class MainActivity extends AppCompatActivity {
             spinnerMain.setAdapter(showingMushrooms ? mushroomAdapter : collectionAdapter);
             rebuildSpinnerData();
             updateConfirmationView();
-            updateExplanation();
         });
     }
 
@@ -334,56 +327,6 @@ public class MainActivity extends AppCompatActivity {
         tvEmptyState.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         spinnerMain.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         cardConfirmation.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-    }
-
-    private void updateExplanation() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("EXPLANATION:\n\n");
-        
-        if (showingMushrooms) {
-            sb.append("MODE: Mushroom Types\n");
-            sb.append("• Source collection: List<MushroomType> (domain models)\n");
-            sb.append("• Adapter: MushroomAdapter transforms models → Views\n");
-            sb.append("• Prompt at position 0: \"").append(getString(R.string.prompt_select_mushroom)).append("\" (not selectable)\n");
-            sb.append("• Stable ID: Scientific name (").append(selectedMushroomId != null ? selectedMushroomId : "none").append(")\n");
-            sb.append("• Selection stored by ID, not position → survives reordering\n");
-            sb.append("• Dropdown layout includes checkbox for \"edible\" preference\n");
-            sb.append("• Checkbox is INDEPENDENT of Spinner selection:\n");
-            sb.append("  - Spinner = single choice (radio behavior)\n");
-            sb.append("  - Checkbox = per-item preference (can toggle multiple)\n");
-            if (selectedMushroomId != null) {
-                MushroomType m = findMushroomById(selectedMushroomId);
-                if (m != null) {
-                    sb.append("\nSELECTED: ").append(m.getCommonName())
-                      .append(" (ID: ").append(m.getId()).append(")")
-                      .append(", Position: ").append(selectedMushroomPosition)
-                      .append(", Edible: ").append(m.isEdible());
-                }
-            }
-        } else {
-            sb.append("MODE: Collection Points\n");
-            sb.append("• Source collection: List<CollectionPoint> (domain models)\n");
-            sb.append("• Adapter: CollectionPointAdapter transforms models → Views\n");
-            sb.append("• Prompt at position 0: \"").append(getString(R.string.prompt_select_collection)).append("\" (not selectable)\n");
-            sb.append("• Stable ID: Custom ID (").append(selectedCollectionId != null ? selectedCollectionId : "none").append(")\n");
-            sb.append("• Selection stored by ID, not position → survives reordering\n");
-            sb.append("• Dropdown layout includes checkbox for \"collected\" status\n");
-            if (selectedCollectionId != null) {
-                CollectionPoint c = findCollectionById(selectedCollectionId);
-                if (c != null) {
-                    sb.append("\nSELECTED: ").append(c.getName())
-                      .append(" (ID: ").append(c.getId()).append(")")
-                      .append(", Position: ").append(selectedCollectionPosition)
-                      .append(", Active: ").append(c.isActive());
-                }
-            }
-        }
-        
-        sb.append("\n\nROTATION TEST: Rotate device → selection persists via stable ID");
-        sb.append("\nEMPTY LIST TEST: Clear data → shows empty state message");
-        sb.append("\nWHAT IF SELECTED OPTION REMOVED? → Falls back to prompt, ID cleared");
-        
-        tvExplanation.setText(sb.toString());
     }
 
     private MushroomType findMushroomById(String id) {

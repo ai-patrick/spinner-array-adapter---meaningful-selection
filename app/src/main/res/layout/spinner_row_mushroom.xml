@@ -24,14 +24,14 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/tv_mushroom_scientific"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="?android:attr/textColorSecondary"
             android:layout_marginTop="2dp" />
     </LinearLayout>
 
@@ -41,6 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:enabled="false" />
+        android:enabled="false"
+        android:buttonTint="?attr/colorControlActivated" />
 
 </LinearLayout>
